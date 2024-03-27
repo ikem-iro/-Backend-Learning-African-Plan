@@ -6,12 +6,12 @@
 ```python
     user_profiles = {
         1: {
-            "name": "Alice",
+            "name": "Amara",
             "age": 25,
             "city": "New York",
         },
         2: {
-            "name": "Bob",
+            "name": "Miracle",
             "age": 30,
             "city": "London",
         },
@@ -136,8 +136,8 @@ async def get_restaurants(city_id: str, cuisine: str = "all", rating: str = "1-5
 
 ```python
 users_data: dict[int, dict[str, str]] = {
-   1: {"name": "Alice", "email": "alice@example.com", "start_date": "2022-01-15"},
-    2: {"name": "Bob", "email": "bob@example.com", "start_date": "2022-03-20"},
+   1: {"name": "Amara", "email": "amara@example.com", "start_date": "2022-01-15"},
+    2: {"name": "Miracle", "email": "miracle@example.com", "start_date": "2022-03-20"},
     3: {"name": "Charlie", "email": "charlie@example.com", "start_date": "2022-02-10"}
 }
 @app.get('/users/{user_id}')

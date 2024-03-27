@@ -1,5 +1,5 @@
 import uvicorn
-from fastapi import FastAPI, HTTPException, Path
+from fastapi import FastAPI, HTTPException, Path, Query
 from datetime import datetime
 
 
@@ -16,12 +16,12 @@ async def home():
 ###Question 1
 user_profiles = {
     1: {
-        "name": "Alice",
+        "name": "Amara",
         "age": 25,
         "city": "New York",
     },
     2: {
-        "name": "Bob",
+        "name": "Miracle",
         "age": 30,
         "city": "London",
     },
@@ -63,11 +63,10 @@ products = [
     {"name": "Widget A", "category": "Electronics", "price": 50},
     {"name": "Widget B", "category": "Fashion", "price": 30},
     {"name": "Widget C", "category": "Home", "price": 20},
-    # Add more products here...
 ]
 
 @app.get('/products')
-async def get_products(category:str = "all", price_range: str = "10-20"):
+async def get_products(category:str = Query("all"), price_range: str = Query("10-20")):
     """
     Retrieves a list of products based on the provided query parameters.
 
@@ -110,7 +109,7 @@ restaurants_data: list[dict[str, str]] = [
 ]
 
 @app.get("/restaurants/{city_id}")
-async def get_restaurants(city_id: str, cuisine: str = "all", rating: str = "1-5"):
+async def get_restaurants(city_id: str, cuisine: str = Query("all"), rating: str = Query("1-5")):
     """
     A coroutine that retrieves restaurants based on city ID, cuisine, and rating.
 
@@ -125,7 +124,7 @@ async def get_restaurants(city_id: str, cuisine: str = "all", rating: str = "1-5
     
     min_rating, max_rating = map(float, rating.split('-'))
     if city_id not in [restaurant["id"] for restaurant in restaurants_data]:
-        raise HTTPException(status_code=404, detail="City not found")
+        raise HTTPException(status_code=400, detail="City not found")
     filtered_restaurants = []
 
     for restaurant in restaurants_data:

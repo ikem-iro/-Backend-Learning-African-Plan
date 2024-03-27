@@ -54,7 +54,6 @@ async def get_users(skip: int = 0, limit: int = 10):  # Query parameters with de
 ```python
 @app.get("/products/")
 async def get_products(category: str = None, sort: str = "asc"): 
-    # Logic to filter products based on category and sort order
     return filtered_products
 ```
 
@@ -111,7 +110,7 @@ app = FastAPI()
 
 @app.post("/users")
 async def create_user(user: User):
-    # user object will be validated against the User model definition
+    pass
 ```
 
 # Usage and Benefits
