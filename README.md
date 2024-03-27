@@ -35,10 +35,17 @@ async def get_item(item_id)
 - Query parameters are not directly defined in the path itself. You use the fastapi.Query parameter decorator within your function arguments to access them.
 
 ```python
-@app.get("/users/")
-async def get_users(skip: int = 0, limit: int = 10):  # Query parameters with defaults
+fake_db_items = [
+    { "item_name" : "foo" },
+    { "item_name" : "bar" },
+    { "item_name" : "bars" }
+    
+]
+
+@app.get("/items/")
+async def get_items(skip: int = 0, limit: int = 10):  # Query parameters with defaults
     # Logic to retrieve users with pagination (offset: skip, limit)
-    return users_list
+    return fake_db_items[skip : skip + limit]
 ```
 
 ## What is the difference between path parameters and query parameters?
