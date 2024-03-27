@@ -66,13 +66,13 @@ products = [
 ]
 
 @app.get('/products')
-async def get_products(category:str = Query("all"), price_range: str = Query("10-20")):
+async def get_products(category:str = Query("all"), price_range: str = "10-50"):
     """
     Retrieves a list of products based on the provided query parameters.
 
     Parameters:
         category (str, optional): The category of the products to retrieve. Defaults to "all".
-        price_range (str, optional): The price range of the products to retrieve. Defaults to "20-50".
+        price_range (str, optional): The price range of the products to retrieve. Defaults to "10-50".
 
     Returns:
         list: A list of dictionaries containing the product information if successful.
@@ -83,13 +83,16 @@ async def get_products(category:str = Query("all"), price_range: str = Query("10
             - error (str): The error message.
     """
     try:
-        min_price, max_price = map(int, price_range.split('-'))
-        if min_price > max_price:
-            raise HTTPException(status_code=400, detail="Invalid price range")
-        if min_price <= 0 or max_price <= 0:
-            raise HTTPException(status_code=400, detail="Invalid price range")
-        filtered_products = [product for product in products if (category == "all" or product["category"] == category.capitalize()) and min_price <= product["price"] <= max_price]
-        return {"filtered products": filtered_products}
+        if category == "all" and price_range is None:
+            return {products}
+        else:
+            min_price, max_price = map(int, price_range.split('-'))
+            if min_price > max_price:
+                raise HTTPException(status_code=400, detail="Invalid price range")
+            if min_price <= 0 or max_price <= 0:
+                raise HTTPException(status_code=400, detail="Invalid price range")
+            filtered_products = [product for product in products if (category == "all" or product["category"] == category.capitalize()) and min_price <= product["price"] <= max_price]
+            return {"filtered products": filtered_products}
     except HTTPException as e:
         return {'error': {e}}
     
@@ -144,8 +147,9 @@ users_data: dict[int, dict[str, str]] = {
     2: {"name": "Bob", "email": "bob@example.com", "start_date": "2022-03-20"},
     3: {"name": "Charlie", "email": "charlie@example.com", "start_date": "2022-02-10"}
 }
+
 @app.get('/users/{user_id}')
-async def get_user(start_date: str, user_id: int = Path(gt = 0)):
+async def get_user(start_date: datetime = Query(description="Date format should be year-month-day"), user_id: int = Path(gt = 0)):
     """
     A function to get user details based on user_id and start_date.
     
@@ -157,9 +161,9 @@ async def get_user(start_date: str, user_id: int = Path(gt = 0)):
     - Dictionary: {"user_id": int, "user_details": dict}
     - If an exception occurs, returns a dictionary with the error message.
     """
-    try: 
+    try:
         if not datetime.strptime(start_date, '%Y-%m-%d'):
-            raise HTTPException(status_code=400, detail="Invalid date format")
+            raise HTTPException(status_code=400, detail="Invalid date format") 
         if user_id not in users_data:
             raise HTTPException(status_code=404, detail="User not found")
         if start_date != users_data[user_id]["start_date"]:
